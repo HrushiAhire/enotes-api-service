@@ -2,6 +2,7 @@ package com.enotes.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService{
 //		category.setIs_active(categoryDto.getIs_active());
 		
 		Category category = mapper.map(categoryDto, Category.class);
-		category.setIs_deleted(false);
+		category.setIsDeleted(false);
 		category.setCreated_by(1);
 		category.setCreated_on(new Date());
 		Category savedCategory = categoryRepository.save(category);
@@ -48,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public List<CategoryDto> getAllCategories() {
 		
-		List<Category> categories = categoryRepository.findAll();
+		List<Category> categories = categoryRepository.findByIsDeletedFalse();
 		
 		List<CategoryDto> categoriesDto = categories.stream().map(cat -> mapper.map(cat, CategoryDto.class)).collect(Collectors.toList());
 		
@@ -58,11 +59,38 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public List<CategoryResponse> getActiveCategories() {
 		
-		List<Category> categories = categoryRepository.findByIsActiveTrue();
+		List<Category> categories = categoryRepository.findByIsActiveTrueAndIsDeletedFalse();
 		
 		List<CategoryResponse> categoriesDto = categories.stream().map(cat -> mapper.map(cat, CategoryResponse.class)).collect(Collectors.toList());
 		
 		return categoriesDto;
 	}
+	@Override
+	public CategoryDto getCategoryById(Integer id) {
+		Optional<Category> category = categoryRepository.findByIdAndIsDeletedFalse(id);
+		
+		if(category.isPresent())
+		{
+			Category category2 = category.get();
+			return mapper.map(category2, CategoryDto.class);
+		}
+		else
+		{
+			return null;
+		}
+	}
 
+	@Override
+	public Boolean deleteCategory(Integer id) {
+		Optional<Category> category = categoryRepository.findById(id);
+		
+		if(category.isPresent())
+		{
+			Category category2 = category.get();
+			category2.setIsDeleted(true);
+			categoryRepository.save(category2);
+			return true;
+		}
+		return false;
+	}
 }

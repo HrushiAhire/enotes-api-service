@@ -18,7 +18,7 @@ public class BaseModel
 {
 	private Boolean isActive;
 	
-	public Boolean is_deleted;
+	public Boolean isDeleted;
 	
 	private Integer created_by;
 	
