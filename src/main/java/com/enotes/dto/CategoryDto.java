@@ -1,9 +1,7 @@
-package com.enotes.entity;
+package com.enotes.dto;
 
 import java.util.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,12 +11,15 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@MappedSuperclass
-public class BaseModel 
+public class CategoryDto 
 {
-	private Boolean isActive;
+	private Integer id;
 	
-	public Boolean is_deleted;
+	private String name;
+	
+	private String description;
+	
+	private Boolean isActive;
 	
 	private Integer created_by;
 	
