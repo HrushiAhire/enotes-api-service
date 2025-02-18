@@ -1,6 +1,5 @@
 package com.enotes.controller;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.enotes.dto.CategoryDto;
 import com.enotes.dto.CategoryResponse;
-import com.enotes.entity.Category;
-import com.enotes.exceptions.ResourceNotFoundException;
 import com.enotes.service.CategoryService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +29,7 @@ public class CategoryController
 	@Autowired
 	private CategoryService categoryService;
 	
-	@PostMapping("/save-category")
+	@PostMapping("/save")
 	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto)
 	{
 		Boolean saveCategory = categoryService.saveCategory(categoryDto);
