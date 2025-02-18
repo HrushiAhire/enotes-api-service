@@ -13,6 +13,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.enotes.util.CommonUtil;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,32 +30,36 @@ public class GlobalExceptionHandler
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> handleNPE(Exception ex)
 	{
-		return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//		return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleResourceNotFoundException(Exception ex)
 	{
-		log.error("Controller :: getCategoryById ::", ex.getMessage());
-		return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.NOT_FOUND);
+//		return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<?> handleValidationException(ValidationException ex)
 	{
-		return new ResponseEntity<>(ex.getErrors(), HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponse(ex.getErrors(), HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(ex.getErrors(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(ExistDataException.class)
 	public ResponseEntity<?> handleDataExistenceException(ExistDataException ex)
 	{
-		return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.CONFLICT);
+//		return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex)
 	{
-		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponseMessage(ex.getMessage(), HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
 //	@ExceptionHandler(MethodArgumentNotValidException.class)
