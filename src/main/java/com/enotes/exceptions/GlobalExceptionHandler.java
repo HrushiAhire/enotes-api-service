@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,6 +42,18 @@ public class GlobalExceptionHandler
 	public ResponseEntity<?> handleValidationException(ValidationException ex)
 	{
 		return new ResponseEntity<>(ex.getErrors(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(ExistDataException.class)
+	public ResponseEntity<?> handleDataExistenceException(ExistDataException ex)
+	{
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex)
+	{
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
 //	@ExceptionHandler(MethodArgumentNotValidException.class)

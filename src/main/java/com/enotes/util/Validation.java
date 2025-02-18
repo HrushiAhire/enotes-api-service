@@ -29,7 +29,7 @@ public class Validation {
 			}
 			else
 			{
-				if(categoryDto.getName().length() < 10)
+				if(categoryDto.getName().length() < 2)
 				{
 					error.put("name", "Name length min 10");
 				}
