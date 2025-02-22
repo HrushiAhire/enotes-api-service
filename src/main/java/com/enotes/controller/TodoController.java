@@ -52,7 +52,7 @@ public class TodoController {
 	
 	@GetMapping("/list")
 	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> getAllTodoByUser(@PathVariable Integer userId) throws Exception
+	public ResponseEntity<?> getAllTodoByUser() throws Exception
 	{
 		List<TodoDto> todoByUser = todoService.getTodoByUser();
 		

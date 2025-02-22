@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,14 +84,13 @@ public class NotesController
 			@RequestParam(defaultValue = "5") Integer pageSize
 			)
 	{
-		Integer userId = 1;
-		NotesResponse allNotes = notesService.getAllNotesByUser(userId, pageNo, pageSize);
+		NotesResponse allNotes = notesService.getAllNotesByUser(pageNo, pageSize);
 		
 		
 		
 //		if(CollectionUtils.isEmpty(allNotes))
 //		{
-//			return ResponseEntity.noContent().build();
+//			return ResponseEntity.noContent().build()
 //		}
 //		else
 //		{
@@ -119,10 +117,8 @@ public class NotesController
 	@GetMapping("/recycle-bin")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> getUserRecycleBinNotes() throws Exception
-	{
-		Integer userId = 1;
-		
-		List<NotesDto> notes = notesService.getUserRecycleBinNotes(userId);
+	{	
+		List<NotesDto> notes = notesService.getUserRecycleBinNotes();
 		
 		if(CollectionUtils.isEmpty(notes))
 		{
@@ -143,8 +139,7 @@ public class NotesController
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> emptyRecycleBean() throws Exception
 	{
-		int userId = 1;
-		notesService.emptyRecycleBean(userId);
+		notesService.emptyRecycleBean();
 		return CommonUtil.createBuildResponseMessage("Delete success", HttpStatus.OK);
 	}
 	
@@ -152,7 +147,6 @@ public class NotesController
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> favouriteNotes(@PathVariable Integer noteId) throws Exception
 	{
-		int userId = 1;
 		notesService.favouriteNotes(noteId);
 		return CommonUtil.createBuildResponseMessage("Notes added to favourite", HttpStatus.CREATED);
 	}
@@ -161,7 +155,6 @@ public class NotesController
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> copyNotes(@PathVariable Integer id) throws Exception
 	{
-		int userId = 1;
 		Boolean copyNotes = notesService.copyNotes(id);
 		if(copyNotes)
 		{
@@ -177,7 +170,6 @@ public class NotesController
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> unFavouriteNotes(@PathVariable Integer favNoteId) throws Exception
 	{
-		int userId = 1;
 		notesService.unFavouriteNotes(favNoteId);
 		return CommonUtil.createBuildResponseMessage("Note removed from favourite", HttpStatus.OK);
 	}
@@ -186,7 +178,6 @@ public class NotesController
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> getUserFavouriteNotes() throws Exception
 	{
-		int userId = 1;
 		List<FavouriteNoteDto> favouriteNotes = notesService.getUserFavouriteNotes();
 		if(!CollectionUtils.isEmpty(favouriteNotes))
 		{
