@@ -37,6 +37,7 @@ import com.enotes.repository.FavouriteNotesRepository;
 import com.enotes.repository.FilesRepository;
 import com.enotes.repository.NotesRepository;
 import com.enotes.service.NotesService;
+import com.enotes.util.CommonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -119,8 +120,8 @@ public class NoteServiceImpl implements NotesService{
 
 
 	@Override
-	public List<NotesDto> getUserRecycleBinNotes(Integer userId) {
-		
+	public List<NotesDto> getUserRecycleBinNotes() {
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<Notes> recycleNotes = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
 		
 		List<NotesDto> list = recycleNotes.stream().map(note -> modelMapper.map(note, NotesDto.class)).toList();
@@ -196,9 +197,9 @@ public class NoteServiceImpl implements NotesService{
 
 
 	@Override
-	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize) {
+	public NotesResponse getAllNotesByUser(Integer pageNo, Integer pageSize) {
 		Pageable pageable =  PageRequest.of(pageNo, pageSize);
-		
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		Page<Notes> notes = notesRepository.findByCreatedByAndIsDeletedFalse(userId, pageable);
 		
 		List<NotesDto> notesList = notes.get().map((note) -> modelMapper.map(note, NotesDto.class)).toList();
@@ -269,7 +270,8 @@ public class NoteServiceImpl implements NotesService{
 
 
 	@Override
-	public void emptyRecycleBean(int userId) {
+	public void emptyRecycleBean() {
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<Notes> recycleBinNotes = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
 		
 		if(!CollectionUtils.isEmpty(recycleBinNotes))
@@ -281,7 +283,7 @@ public class NoteServiceImpl implements NotesService{
 
 	@Override
 	public void favouriteNotes(Integer noteId) throws Exception {
-		int userId = 1;
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		Notes note = notesRepository.findById(noteId).orElseThrow(() -> new ResourceNotFoundException("Note does not exist"));
 		
 		FavouriteNote favNote = FavouriteNote.builder()
@@ -303,7 +305,7 @@ public class NoteServiceImpl implements NotesService{
 
 	@Override
 	public List<FavouriteNoteDto> getUserFavouriteNotes() throws Exception {
-		int userId = 1;
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		
 		List<FavouriteNote> notes =  favouriteNotesRepository.findByUserId(userId);
 		
