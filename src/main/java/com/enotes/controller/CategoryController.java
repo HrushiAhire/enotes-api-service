@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,6 +32,7 @@ public class CategoryController
 	private CategoryService categoryService;
 	
 	@PostMapping("/save")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto)
 	{
 		Boolean saveCategory = categoryService.saveCategory(categoryDto);
@@ -38,16 +40,15 @@ public class CategoryController
 		if(saveCategory)
 		{
 			return CommonUtil.createBuildResponseMessage("Saved Successfully", HttpStatus.CREATED);
-//			return new ResponseEntity<>("saved", HttpStatus.CREATED);
 		}
 		else
 		{
 			return CommonUtil.createErrorResponseMessage("Category Not Saved", HttpStatus.INTERNAL_SERVER_ERROR);
-//			return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}	
 	}
 	
 	@GetMapping("/")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getAllCategories()
 	{
 		List<CategoryDto> allCategories = categoryService.getAllCategories();
@@ -59,11 +60,11 @@ public class CategoryController
 		else
 		{
 			return CommonUtil.createBuildResponse(allCategories, HttpStatus.OK);
-//			return new ResponseEntity<>(allCategories, HttpStatus.OK);
 		}
 	}
 	
 	@GetMapping("/active")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	public ResponseEntity<?> getActiveCategories()
 	{
 		List<CategoryResponse> allCategories = categoryService.getActiveCategories();
@@ -75,40 +76,37 @@ public class CategoryController
 		else
 		{
 			return CommonUtil.createBuildResponse(allCategories, HttpStatus.OK);
-//			return new ResponseEntity<>(allCategories, HttpStatus.OK);
 		}
 	}
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getCategoryById(@PathVariable Integer id) throws Exception
 	{
 		CategoryDto categoryById = categoryService.getCategoryById(id);
 		if(ObjectUtils.isEmpty(categoryById))
 		{
 			return CommonUtil.createErrorResponseMessage("Internal Server Error", HttpStatus.NOT_FOUND);
-//			return new ResponseEntity<>("Internal Server Error", HttpStatus.NOT_FOUND);
 		}
 		else
 		{
 			return CommonUtil.createBuildResponse(categoryById, HttpStatus.OK);
-//			return new ResponseEntity<>(categoryById, HttpStatus.OK);
 		}
 		
 	}
 	
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> deleteCategoryById(@PathVariable Integer id)
 	{
 		Boolean deleted = categoryService.deleteCategory(id);
 		if(deleted)
 		{
 			return CommonUtil.createBuildResponse("Category deleted successfully", HttpStatus.OK);
-//			return new ResponseEntity<>("Category with id deleted successfully : " + id, HttpStatus.OK);
 		}
 		else
 		{
 			return CommonUtil.createErrorResponseMessage("Category not deleted", HttpStatus.INTERNAL_SERVER_ERROR);
-//			return new ResponseEntity<>("Category not deleted", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}

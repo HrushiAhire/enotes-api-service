@@ -1,6 +1,7 @@
 package com.enotes.exceptions;
 
 import java.io.FileNotFoundException;
+import java.nio.file.AccessDeniedException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,21 +55,26 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(FileNotFoundException.class)
 	public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException e) {
-		return CommonUtil.createErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(ExistDataException.class)
 	public ResponseEntity<?> handleExistDataException(ExistDataException e) {
-		return CommonUtil.createErrorResponse(e.getMessage(), HttpStatus.CONFLICT);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-		return CommonUtil.createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException e) {
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.FORBIDDEN);
 	}
 	
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
-		return CommonUtil.createErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 }
