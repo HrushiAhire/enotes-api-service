@@ -3,6 +3,7 @@ package com.enotes.config.security;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.enotes.handler.GenericResponse;
 import com.enotes.service.JwtService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,35 +38,60 @@ public class JwtFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		String authHeader = request.getHeader("Authorization");
-		
-		//Authorization = Bearer jgfjgerjgkfrshflk.fhgkjhfgjagehgfwufgajewf
-		String token = null;
-		String userName = null;
-		
-		if(authHeader != null && authHeader.startsWith("Bearer "))
-		{
-			token = authHeader.substring(7);
-			userName = jwtService.extractUserName(token);
-		}
-		
-		//username = email
-		if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null)
-		{
-			UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+		try {
+			String authHeader = request.getHeader("Authorization");
 			
-			Boolean validateToken = jwtService.validateToken(token, userDetails);
-			if(validateToken)
+			//Authorization = Bearer jgfjgerjgkfrshflk.fhgkjhfgjagehgfwufgajewf
+			String token = null;
+			String userName = null;
+			
+			if(authHeader != null && authHeader.startsWith("Bearer "))
 			{
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-				
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				
-				SecurityContextHolder.getContext().setAuthentication(authentication);
+				token = authHeader.substring(7);
+				userName = jwtService.extractUserName(token);
 			}
+			
+			//username = email
+			if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null)
+			{
+				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+				
+				Boolean validateToken = jwtService.validateToken(token, userDetails);
+				if(validateToken)
+				{
+					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+					
+					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			generateResponse(response, e);
+			
+			return;
 		}
 		
 		filterChain.doFilter(request, response);
+	}
+
+	private void generateResponse(HttpServletResponse response, Exception e) throws IOException {
+		
+		response.setContentType("application/json");
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+		
+		Object error = GenericResponse
+				.builder()
+				.status("failed")
+				.message(e.getMessage())
+				.responseStatus(HttpStatus.UNAUTHORIZED)
+				.build()
+				.create()
+				.getBody();
+		
+		response.getWriter().write(new ObjectMapper().writeValueAsString(error));
 	}
 	
 	
