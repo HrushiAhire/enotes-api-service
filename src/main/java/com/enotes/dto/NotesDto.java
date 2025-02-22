@@ -1,5 +1,6 @@
 package com.enotes.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.enotes.entity.Category;
@@ -32,6 +33,10 @@ public class NotesDto
 	private Date updatedOn;
 	
 	private FilesDto fileDetails;
+	
+	private boolean isDeleted;
+	
+	private LocalDateTime deletedOn;
 	
 	@Getter
 	@Setter

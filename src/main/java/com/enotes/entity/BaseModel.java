@@ -24,17 +24,17 @@ public abstract class BaseModel
 {
 	@CreatedBy
 	@Column(updatable = false)
-	private Integer created_by;
+	private Integer createdBy;
 	
 	@CreatedDate
 	@Column(updatable = false)
-	private Date created_on;
+	private Date createdOn;
 	
 	@LastModifiedBy
 	@Column(insertable = false)
-	private Integer updated_by;
+	private Integer updatedBy;
 	
 	@LastModifiedDate
 	@Column(insertable = false)
-	private Date updated_on;
+	private Date updatedOn;
 }

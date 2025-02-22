@@ -71,8 +71,8 @@ public class CategoryServiceImpl implements CategoryService{
 		if(cat.isPresent())
 		{
 			Category existing = cat.get();
-			category.setCreated_by(existing.getCreated_by());
-			category.setCreated_on(existing.getCreated_on());
+			category.setCreatedBy(existing.getCreatedBy());
+			category.setCreatedOn(existing.getCreatedOn());
 			category.setIsDeleted(existing.getIsDeleted());
 			
 //			category.setUpdated_by(1);
