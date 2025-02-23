@@ -85,17 +85,19 @@ public class NotesController
 			)
 	{
 		NotesResponse allNotes = notesService.getAllNotesByUser(pageNo, pageSize);
-		
-		
-		
-//		if(CollectionUtils.isEmpty(allNotes))
-//		{
-//			return ResponseEntity.noContent().build()
-//		}
-//		else
-//		{
-			return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
-//		}
+		return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
+	}
+	
+	@GetMapping("/search-notes")
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> getNotesByUserSearch(
+			@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "5") Integer pageSize,
+			@RequestParam(defaultValue = "")String keyword
+			)
+	{
+		NotesResponse allNotes = notesService.getNotesByUserSearch(pageNo, pageSize, keyword);
+		return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
 	}
 	
 	@GetMapping("/delete/{id}")
@@ -188,4 +190,6 @@ public class NotesController
 			return ResponseEntity.noContent().build();
 		}
 	}
+	
+	
 }
