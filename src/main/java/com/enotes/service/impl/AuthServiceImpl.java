@@ -75,17 +75,16 @@ public class AuthServiceImpl implements AuthService{
 		if(!ObjectUtils.isEmpty(savedUser))
 		{
 			//send email
-			emailSend(savedUser, url);
+			emailSendForRegistration(savedUser, url);
 			return true;
 		}
 		return false;
 	}
 
-	private void emailSend(User savedUser, String url) throws Exception {
+	private void emailSendForRegistration(User savedUser, String url) throws Exception {
 		String message = "Hii <b>[[username]]</b>!! Your account registered sucessfully"
 				+"<br> Click the below link to verify your account <br>"
 				+"<a href='[[url]]'>Click Here</a> <br>";
-		
 		message = message.replace("[[username]]", savedUser.getFirstName());
 		message = message.replace("[[url]]", url+"/api/v1/home/verify?uid="+savedUser.getId()+"&&code="+savedUser.getAccountStatus().getVerificationCode());
 		
