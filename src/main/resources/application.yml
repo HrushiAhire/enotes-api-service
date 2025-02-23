@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: Enotes_API_Service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/e_notes
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hrushikesh.ahire@gmail.com
+    password: zdfr oegk vfsd nnor
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      # mail.smtp.starttls.required: true
+
+file:
+  upload:
+    path: C:\\Users\\Dell\\Documents\\uploads\\
+
+server:
+  port: 8081
