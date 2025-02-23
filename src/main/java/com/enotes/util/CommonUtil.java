@@ -79,9 +79,8 @@ public class CommonUtil {
 
 	public static String getUrl(HttpServletRequest request) {
 
-		String apiUrl = request.getRequestURI().toString();       	//http://localhost:8080/api/v1/auth
+		String apiUrl = request.getRequestURL().toString();       	//http://localhost:8080/api/v1/auth
 		apiUrl = apiUrl.replace(request.getServletPath(), "");		//http://localhost:8080
-		
 		return apiUrl;
 	}
 	
