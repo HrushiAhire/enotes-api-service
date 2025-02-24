@@ -25,6 +25,14 @@ spring:
       mail.smtp.starttls.enable: true
       # mail.smtp.starttls.required: true
 
+springdoc:
+   swagger-ui:
+      operationsSorter: method
+      tagsSorter: alpha
+      path: /enotes-doc
+   api-docs:
+      path: /enotes-api-doc
+
 file:
   upload:
     path: C:\\Users\\Dell\\Documents\\uploads\\
